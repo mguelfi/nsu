@@ -1,0 +1,24 @@
+[nessus]
+# Access key for an account that can read scan results
+accessKey = wnimhx040msap14c5sk0ick5drtct5f2jdwpf90dkqguvqdzhhsvxku51zgwecxh
+secretKey = zxx19f0126ta40c64t3qw4tr990uq67fv8gdcbi7s2hwtlfrnitfhb5oqugy1sjo
+# host can be ip or name
+host = nessushost
+port = 8834
+ssl_verify = False
+scheme = https
+
+[azure]
+connection_string =
+# Can be a blob container or a file share folder, not both.
+container =
+folder =
+
+[aws]
+url =
+api_key =
+repo =
+ssl_verify = False
+
+[savefile]
+path=~/nessus2azure.save

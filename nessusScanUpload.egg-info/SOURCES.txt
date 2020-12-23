@@ -1,0 +1,9 @@
+README.md
+setup.py
+nessusScanUpload/__init__.py
+nessusScanUpload/__main__.py
+nessusScanUpload/logging_config.py
+nessusScanUpload.egg-info/PKG-INFO
+nessusScanUpload.egg-info/SOURCES.txt
+nessusScanUpload.egg-info/dependency_links.txt
+nessusScanUpload.egg-info/top_level.txt

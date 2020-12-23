@@ -1,0 +1,9 @@
+README.md
+setup.py
+nessus2azure/__init__.py
+nessus2azure/__main__.py
+nessus2azure/logging_config.py
+nessus2azure.egg-info/PKG-INFO
+nessus2azure.egg-info/SOURCES.txt
+nessus2azure.egg-info/dependency_links.txt
+nessus2azure.egg-info/top_level.txt
