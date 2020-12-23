@@ -8,6 +8,7 @@ import platform
 import collections
 import logging
 import requests
+import gzip
 import distutils.util
 from time import sleep
 from tempfile import TemporaryFile
