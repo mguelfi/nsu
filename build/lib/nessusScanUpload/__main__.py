@@ -165,15 +165,16 @@ def find_scans(nessus):
         try:
             history = sorted(nessus.scans.results(scan['id'])['history'],
                     key = lambda item: item['last_modification_date'])
+            # sort by modification date so that the last entry is the latest scan
             lastread[scan['id']] = history[-1]['last_modification_date']
             for result in history:
                 if (result['status'] == 'completed'
-                        and (not args.lastread
+                        and (not args.lastread # empty save file
                             or result['last_modification_date'] >
                             int(args.lastread.get(str(scan['id']), 0)))):
                     scans[scan['id']].append(result['history_id'])
                     count += 1
-        except TypeError:
+        except TypeError: # scan has no history
             pass
     log.info('Found {} new scans.'.format(count))
     return scans, lastread
@@ -207,7 +208,9 @@ def load_config(path):
 
 def highlight(msg):
     print('==============================================================================')
+    print('==============================================================================')
     print(msg)
+    print('==============================================================================')
     print('==============================================================================')
 
 
