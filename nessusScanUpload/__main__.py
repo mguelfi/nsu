@@ -13,9 +13,12 @@ import distutils.util
 from time import sleep
 from tempfile import TemporaryFile
 from tenable.nessus import Nessus
-from azure.storage.fileshare import ShareFileClient
-from azure.storage.blob import BlobServiceClient
-import azure.core.exceptions
+try:
+    from azure.storage.fileshare import ShareFileClient
+    from azure.storage.blob import BlobServiceClient
+    import azure.core.exceptions
+except ModuleNotFoundError:
+    _no_azure_found = True
 
 def main(method):
     """
@@ -253,6 +256,8 @@ if __name__ == '__main__':
     if not args.conn_str:
         args.conn_str = config['azure'].get('connection_string', None)
     if args.conn_str:
+        if _no_azure_found:
+            raise Exception('azure.storage.fileshare, azure.storage.blob or azure.core not installed.')
         _use_azure = True
         _method = 'azure'
     else:
