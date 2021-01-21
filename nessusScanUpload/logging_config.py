@@ -32,11 +32,17 @@ log.addHandler(handler)
 
 if os.environ.get('DEBUG'):
     print('DEBUG enabled')
+    log.setLevel(logging.DEBUG)
     console = logging.StreamHandler()
     console.setLevel(logging.DEBUG)
     console.setFormatter(formatter)
     log.addHandler(console)
 
-# Quiet this logger down...
+# Quiet library loggers down...
 azure_logger = logging.getLogger('azure.core.pipeline.policies.http_logging_policy')
 azure_logger.setLevel(logging.WARN)
+urllib3_logger = logging.getLogger('urllib3.connectionpool')
+urllib3_logger.setLevel(logging.WARN)
+tenable_logger = logging.getLogger('tenable.nessus.Nessus')
+tenable_logger.setLevel(logging.WARN)
+

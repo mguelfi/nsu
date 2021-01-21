@@ -1,11 +1,11 @@
 import setuptools
-
+from _version import __version__
 with open("README.md", "r") as fh:
     long_description = fh.read()
 
 setuptools.setup(
     name="nessusScanUpload",
-    version="0.0.1",
+    version=__version__,
     author="Michael Guelfi",
     author_email="michael.guelfi@defence.gov.au",
     description="Posts scans from Nessus Manager to AWS/Azure",

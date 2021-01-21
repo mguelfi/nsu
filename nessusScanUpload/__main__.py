@@ -53,6 +53,7 @@ def main(method):
                 except requests.exceptions.HTTPError:
                     log.error('Authentication failed, check your AWS configuration')
                     sys.exit(3)
+            log.debug('Sleeping for 30 seconds.')
             sleep(30)
         update_save(item, lastread[item])
 
@@ -141,6 +142,8 @@ def update_save(scan_id, last_modification_date):
         savefile.read_file(open(args.savefile))
     except FileNotFoundError:
         savefile['lastread'] = {}
+    log.debug('Updated scan {} with date: {}'.format(
+        scan_id, last_modification_date))
     savefile['lastread'][str(scan_id)] = str(last_modification_date)
 
     with open(args.savefile, 'w') as fh:
@@ -168,6 +171,8 @@ def find_scans(nessus):
         try:
             history = sorted(nessus.scans.results(scan['id'])['history'],
                     key = lambda item: item['last_modification_date'])
+            log.debug('Scan "{}" history size: {}'.format(scan['name'],
+                len(history)))
             # sort by modification date so that the last entry is the latest scan
             lastread[scan['id']] = history[-1]['last_modification_date']
             for result in history:
@@ -220,6 +225,7 @@ def highlight(msg):
 if __name__ == '__main__':
     # Read command line arguments and config files
     import nessusScanUpload.logging_config
+    from _version import __version__
     log = logging.getLogger('nessusScanUpload')
     
     cwd = os.path.dirname(__file__)
@@ -239,6 +245,8 @@ if __name__ == '__main__':
     parser.add_argument('--aws-url', dest='aws_url', help='URL to PUT files to in AWS')
     parser.add_argument('--api-key', dest='api_key', help='API key assigned for access')
     parser.add_argument('--repo', dest='repo', help='repo assigned')
+    parser.add_argument('--version', action='version',
+                    version='nessusScanUpload {version}'.format(version=__version__))
     args = parser.parse_args()
 
     config = load_config(args.configfile)
