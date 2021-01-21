@@ -46,7 +46,7 @@ container =
 folder = foldername
 
 [aws]
-url = https://b0cfrixog2.execute-api.ap-southeast-2.amazonaws.com/prod
+url = 
 api_key = <as advised>
 repo = <as advised>
 ssl_verify = False
