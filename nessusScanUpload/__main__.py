@@ -55,7 +55,7 @@ def main(method):
                     sys.exit(3)
             log.debug('Sleeping for 30 seconds.')
             sleep(30)
-        update_save(item, lastread[item])
+        update_save(item, lastread[item], args.savefile)
 
 def put_upload(fp, scan_name):
     """
@@ -126,7 +126,7 @@ def connect_to_nessus():
     return nessus
 
 
-def update_save(scan_id, last_modification_date):
+def update_save(scan_id, last_modification_date, save_filename):
     """
     Update the save file with the last_modification_date for this scan.
     Needs to be called after each scan is processed to avoid double
@@ -136,17 +136,20 @@ def update_save(scan_id, last_modification_date):
         int the scan just processed
     :param last_modification_date:
         int date in epoch format that the last scan was completed
+    :param save_filename:
+        str filename per the configuration file
     """
+    log = logging.getLogger(__name__)
     savefile = configparser.ConfigParser()
     try:
-        savefile.read_file(open(args.savefile))
-    except FileNotFoundError:
+        savefile.read_file(open(save_filename))
+        _ = savefile['lastread']
+    except (FileNotFoundError, KeyError):
         savefile['lastread'] = {}
     log.debug('Updated scan {} with date: {}'.format(
         scan_id, last_modification_date))
     savefile['lastread'][str(scan_id)] = str(last_modification_date)
-
-    with open(args.savefile, 'w') as fh:
+    with open(save_filename, 'w') as fh:
         savefile.write(fh)
 
 
@@ -164,6 +167,7 @@ def find_scans(nessus):
         defaultdict(list) scans contains a list of history_ids per scan_id
         dict listread contains the last_modification_date per scan_id 
     """
+    log = logging.getLogger(__name__)
     scans = collections.defaultdict(list)
     lastread = {} # dictionary of scan_id,last_modification_date for save config
     count = 0
@@ -221,15 +225,7 @@ def highlight(msg):
     print('==============================================================================')
     print('==============================================================================')
 
-
-if __name__ == '__main__':
-    # Read command line arguments and config files
-    import nessusScanUpload.logging_config
-    from _version import __version__
-    log = logging.getLogger('nessusScanUpload')
-    
-    cwd = os.path.dirname(__file__)
-
+def parse_argv():
     parser = argparse.ArgumentParser()
     parser.add_argument('--config-file', '-c', dest='configfile',
             help='Configuration file to use')
@@ -248,6 +244,18 @@ if __name__ == '__main__':
     parser.add_argument('--version', action='version',
                     version='nessusScanUpload {version}'.format(version=__version__))
     args = parser.parse_args()
+    return args
+
+
+if __name__ == '__main__':
+    # Read command line arguments and config files
+    import nessusScanUpload.logging_config
+    from _version import __version__
+    log = logging.getLogger('nessusScanUpload')
+    
+    cwd = os.path.dirname(__file__)
+
+    args = parse_argv()
 
     config = load_config(args.configfile)
 
